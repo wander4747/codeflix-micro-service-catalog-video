@@ -18,4 +18,11 @@ trait MethodsMagicsTrait
         $className = get_class($this);
         throw new \Exception("Property {$property} not found in class {$className}");
     }
+
+
+    public function id(): string
+    {
+        return (string) $this->id;
+    }
+
 }
