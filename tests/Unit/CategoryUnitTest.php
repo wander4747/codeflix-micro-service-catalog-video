@@ -46,4 +46,24 @@ class CategoryUnitTest extends TestCase
         $category->disable();
         $this->assertFalse($category->isActive);
     }
+
+    public function testUpdate()
+    {
+        $uuid = '123';
+
+        $category = new Category(
+            id: $uuid,
+            name: 'New Category',
+            description: 'New Description',
+            isActive: true
+        );
+
+        $category->update(
+            name: 'New name',
+            description: 'New description'
+        );
+
+        $this->assertEquals('New name', $category->name);
+        $this->assertEquals('New description', $category->description);
+    }
 }
