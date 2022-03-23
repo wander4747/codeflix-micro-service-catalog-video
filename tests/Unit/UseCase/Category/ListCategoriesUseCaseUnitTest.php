@@ -37,6 +37,34 @@ class ListCategoriesUseCaseUnitTest extends TestCase
         $this->spy->shouldHaveReceived('paginate');
     }
 
+    public function testListCategories()
+    {
+        $register = new stdClass();
+        $register->id = 'id';
+        $register->name = 'name';
+        $register->description = 'description';
+        $register->is_active = 'is_active';
+        $register->created_at = 'created_at';
+        $register->updated_at = 'updated_at';
+        $register->deleted_at = 'created_at';
+
+        $mockPagination = $this->mockPagination([
+            $register,
+        ]);
+
+        $this->mockRepo = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
+        $this->mockRepo->shouldReceive('paginate')->andReturn($mockPagination);
+
+        $this->mockInputDto = Mockery::mock(ListCategoriesInputDto::class, ['filter', 'desc']);
+
+        $useCase = new ListCategoriesUseCase($this->mockRepo);
+        $responseUseCase = $useCase->execute($this->mockInputDto);
+
+        $this->assertCount(1, $responseUseCase->items);
+        $this->assertInstanceOf(stdClass::class, $responseUseCase->items[0]);
+        $this->assertInstanceOf(ListCategoriesOutputDto::class, $responseUseCase);
+    }
+
     protected function mockPagination(array $items = [])
     {
         $this->mockPagination = Mockery::mock(stdClass::class, PaginationInterface::class);
