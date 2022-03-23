@@ -23,6 +23,7 @@ class CreateCategoryUseCaseUnitTest extends TestCase
             $categoryName
         ]);
         $this->mockEntity->shouldReceive('id')->andReturn($uuid);
+        $this->mockEntity->shouldReceive('createdAt')->andReturn(date('Y-m-d H:i:s'));
 
         $this->mockRepo = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
         $this->mockRepo->shouldReceive('insert')->andReturn($this->mockEntity);
@@ -46,7 +47,7 @@ class CreateCategoryUseCaseUnitTest extends TestCase
         $useCase = new CreateCategoryUseCase($this->spy);
         $responseUseCase = $useCase->execute($this->mockInputDto);
         $this->spy->shouldHaveReceived('insert');
-        
+
         Mockery::close();
     }
 }
