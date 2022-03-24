@@ -1,8 +1,14 @@
 {
-    "name": "laravel/laravel",
+    "name": "wander4747/app-php-catalog-video",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "App with PHP - Catalog Video",
     "keywords": ["framework", "laravel"],
+    "authors": [
+        {
+            "name": "Wander Douglas",
+            "email": "wander.douglas14@gmail.com"
+        }
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.0.2",

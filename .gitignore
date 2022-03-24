@@ -3,6 +3,7 @@
 /public/storage
 /storage/*.key
 /vendor
+*.log
 .composer
 .env
 .env.backup
