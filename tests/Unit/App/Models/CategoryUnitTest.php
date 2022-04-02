@@ -6,56 +6,38 @@ use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use PHPUnit\Framework\TestCase;
 
-class CategoryUnitTest extends TestCase
+class CategoryUnitTest extends ModelTestCase
 {
-
     protected function model(): Model
     {
         return new Category();
     }
 
-    public function testIfUseTraits()
+    protected function traits(): array
     {
-        $expected = [
+        return [
             HasFactory::class,
-            SoftDeletes::class
+            SoftDeletes::class,
         ];
-
-        $traits = array_keys(class_uses($this->model()));
-
-        $this->assertEquals($expected, $traits);
     }
 
-    public function testFillable()
+    protected function fillables(): array
     {
-        $expected = [
+        return [
             'id',
             'name',
             'description',
-            'is_active'
+            'is_active',
         ];
-
-        $fillables = $this->model()->getFillable();
-        $this->assertEquals($expected, $fillables);
     }
 
-    public function testIncrementing()
+    protected function casts(): array
     {
-        $model = $this->model();
-        $this->assertFalse($model->incrementing);
-    }
-
-    public function testHasCasts()
-    {
-        $expected = [
+        return [
             'id' => 'string',
             'is_active' => 'boolean',
-            'deleted_at' => 'datetime',
+            'deleted_at' => 'datetime'
         ];
-
-        $casts = $this->model()->getCasts();
-        $this->assertEquals($expected, $casts);
     }
 }
