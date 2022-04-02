@@ -18,13 +18,44 @@ class CategoryUnitTest extends TestCase
 
     public function testIfUseTraits()
     {
-        $traitsNeed = [
+        $expected = [
             HasFactory::class,
             SoftDeletes::class
         ];
 
-        $traitsUsed = array_keys(class_uses($this->model()));
+        $traits = array_keys(class_uses($this->model()));
 
-        $this->assertEquals($traitsNeed, $traitsUsed);
+        $this->assertEquals($expected, $traits);
+    }
+
+    public function testFillable()
+    {
+        $expected = [
+            'id',
+            'name',
+            'description',
+            'is_active'
+        ];
+
+        $fillables = $this->model()->getFillable();
+        $this->assertEquals($expected, $fillables);
+    }
+
+    public function testIncrementing()
+    {
+        $model = $this->model();
+        $this->assertFalse($model->incrementing);
+    }
+
+    public function testHasCasts()
+    {
+        $expected = [
+            'id' => 'string',
+            'is_active' => 'boolean',
+            'deleted_at' => 'datetime',
+        ];
+
+        $casts = $this->model()->getCasts();
+        $this->assertEquals($expected, $casts);
     }
 }
