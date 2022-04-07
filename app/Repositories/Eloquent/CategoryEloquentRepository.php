@@ -11,7 +11,7 @@ use Core\Domain\Repository\PaginationInterface;
 
 class CategoryEloquentRepository implements CategoryRepositoryInterface
 {
-    protected $model;
+    protected Model $model;
 
     public function __construct(Model $category)
     {
@@ -55,7 +55,14 @@ class CategoryEloquentRepository implements CategoryRepositoryInterface
 
     public function paginate(string $filter = '', $order = 'DESC', int $page = 1, int $totalPage = 15): PaginationInterface
     {
-        return new PaginationPresenter();
+        $query = $this->model;
+        if ($filter) {
+            $query = $query->where('name', 'LIKE', "%{$filter}%");
+        }
+        $query = $query->orderBy('id', $order);
+        $paginator = $query->paginate();
+
+        return new PaginationPresenter($paginator);
     }
 
     public function update(Category $category): Category
