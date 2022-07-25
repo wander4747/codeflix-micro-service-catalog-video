@@ -18,7 +18,7 @@ use stdClass;
 
 class UpdateCastMermberUseCaseUnitTest extends TestCase
 {
-    public function test_update()
+    public function testUpdate()
     {
         $uuid = (string) RamseyUuid::uuid4();
 
