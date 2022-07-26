@@ -11,6 +11,8 @@ use Core\Domain\Enum\{
     Rating,
     MediaStatus
 };
+use Core\Domain\Exception\EntityValidationException;
+use Core\Domain\Exception\NotificationException;
 use Core\Domain\ValueObject\{
     Image,
     Media
@@ -297,5 +299,19 @@ class VideoUnitTest extends TestCase {
         $this->assertNotNull($video->videoFile());
         $this->assertInstanceOf(Media::class, $video->videoFile());
         $this->assertEquals("path/video.mp4", $video->videoFile->path);
+    }
+
+    public function testExceptions()
+    {
+        $this->expectException(NotificationException::class);
+
+        new Video(
+            title: 'Ne',
+            description: 'Ne',
+            yearLaunched: 2021,
+            duration: 12,
+            opened: true,
+            rating: Rating::RATE12,
+        );
     }
 }
