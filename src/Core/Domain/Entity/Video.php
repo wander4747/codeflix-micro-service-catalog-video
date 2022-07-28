@@ -1,12 +1,10 @@
 <?php 
 
 namespace Core\Domain\Entity;
-use Core\Domain\Entity\Traits\MethodsMagicsTrait;
+
 use Core\Domain\Enum\Rating;
 use Core\Domain\Exception\NotificationException;
 use Core\Domain\Factory\VideoValidatorFactory;
-use Core\Domain\Notification\Notification;
-use Core\Domain\Validation\DomainValidation;
 use Core\Domain\ValueObject\Uuid;
 use DateTime;
 use Core\Domain\ValueObject\{
@@ -72,32 +70,46 @@ class Video extends Entity {
     {
         unset($this->castMembersId[array_search($castMemberId, $this->castMembersId)]);
     }
-
     public function thumbFile(): ?Image
     {
         return $this->thumbFile;
     }
-
+    public function setThumbFile(Image $thumbFile): void
+    {
+        $this->thumbFile = $thumbFile;
+    }
     public function bannerFile(): ?Image
     {
         return $this->bannerFile;
     }
-
+    public function setBannerFile(Image $bannerFile): void
+    {
+        $this->bannerFile = $bannerFile;
+    }
     public function thumbHalf(): ?Image
     {
         return $this->thumbHalf;
     }
-
+    public function setThumbHalf(Image $thumbHalf): void
+    {
+        $this->thumbHalf = $thumbHalf;
+    }
     public function trailerFile(): ?Media
     {
         return $this->trailerFile;
     }
-
+    public function setTrailerFile(Media $trailerFile): void
+    {
+        $this->trailerFile = $trailerFile;
+    }
     public function videoFile(): ?Media
     {
         return $this->videoFile;
     }
-
+    public function setVideoFile(Media $videoFile): void
+    {
+        $this->videoFile = $videoFile;
+    }
     protected function validation()
     {
         VideoValidatorFactory::create()->validate($this);
