@@ -47,7 +47,7 @@ class CreateVideoUseCaseUnitTest extends TestCase
         $response = $this->useCase->execute(
             input: $this->createMockInputDTO()
         );
-
+        
         $this->assertInstanceOf(CreateOutputVideoDto::class, $response);
         $this->assertTrue(true);
     }
@@ -56,6 +56,7 @@ class CreateVideoUseCaseUnitTest extends TestCase
     {
         $mock = Mockery::mock(stdClass::class, VideoRepositoryInterface::class);
         $mock->shouldReceive('insert')->andReturn($this->createMockEntity());
+        $mock->shouldReceive('updateMedia');
         return $mock;
     }
 
