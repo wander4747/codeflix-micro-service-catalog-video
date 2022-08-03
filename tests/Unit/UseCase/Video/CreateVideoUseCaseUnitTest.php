@@ -4,6 +4,7 @@ namespace Tests\Unit\UseCase\Video;
 
 use Core\Domain\Entity\Video;
 use Core\Domain\Enum\Rating;
+use Core\Domain\Exception\NotFoundException;
 use Core\Domain\Repository\{
     CastMemberRepositoryInterface,
     CategoryRepositoryInterface,
@@ -52,6 +53,97 @@ class CreateVideoUseCaseUnitTest extends TestCase
         $this->assertTrue(true);
     }
 
+    /**
+     * @dataProvider dataProviderIds
+     */
+    public function testExceptionCategoriesIds(
+        string $label,
+        array $ids,
+    )
+    {
+        $this->expectException(NotFoundException::class);
+        $this->expectErrorMessage(sprintf('%s %s not found', $label, implode(', ', $ids)));
+        $response = $this->useCase->execute(
+            input: $this->createMockInputDTO(
+                categoriesIds: $ids
+            )
+        );
+        
+        $this->assertInstanceOf(CreateOutputVideoDto::class, $response);
+    }
+    public function testExceptionMessageCategoriesIds()
+    {
+        $this->expectException(NotFoundException::class);
+        $this->expectErrorMessage('Categories uuid1, uuid2 not found');
+        $response = $this->useCase->execute(
+            input: $this->createMockInputDTO(
+                categoriesIds: ['uuid1', 'uuid2']
+            )
+        );
+        
+        $this->assertInstanceOf(CreateOutputVideoDto::class, $response);
+    }
+    public function dataProviderIds(): array
+    {
+        return [
+            ['Category', ['uuid-1']],
+            ['Categories', ['uuid-1', 'uuid-2']],
+            ['Categories', ['uuid-1', 'uuid-2', 'uuid-3']],
+        ];
+    }
+    /**
+     * @dataProvider dataProviderFiles
+     */
+    public function testUploadFile(
+        array $video,
+        array $trailer,
+        array $thumb,
+        array $banner,
+        array $thumbHalf,
+    )
+    {
+        $response = $this->useCase->execute(
+            input: $this->createMockInputDTO(
+                videoFile: $video['value'],
+                trailerFile: $trailer['value'],
+                thumbFile: $thumb['value'],
+                bannerFile: $banner['value'],
+                thumbHalf: $thumbHalf['value'],
+            )
+        );
+
+        $this->assertEquals($response->videoFile, $video['expected']);
+        $this->assertEquals($response->trailerFile, $trailer['expected']);
+        $this->assertEquals($response->thumbFile, $thumb['expected']);
+        $this->assertEquals($response->bannerFile, $banner['expected']);
+        $this->assertEquals($response->thumbHalf, $thumbHalf['expected']);
+    }
+    public function dataProviderFiles(): array
+    {
+        return [
+            [
+                'video' => ['value' => ['tmp' => 'tmp/file.mp4'], 'expected' => 'path/file.png'],
+                'trailer' => ['value' => ['tmp' => 'tmp/file.mp4'], 'expected' => 'path/file.png'],
+                'thumb' => ['value' => ['tmp' => 'tmp/file.mp4'], 'expected' => 'path/file.png'],
+                'banner' => ['value' => ['tmp' => 'tmp/file.mp4'], 'expected' => 'path/file.png'],
+                'thumbHalf' => ['value' => ['tmp' => 'tmp/file.mp4'], 'expected' => 'path/file.png'],
+            ],
+            [
+                'video' => ['value' => ['tmp' => 'tmp/file.mp4'], 'expected' => 'path/file.png'],
+                'trailer' => ['value' => null, 'expected' => null],
+                'thumb' => ['value' => ['tmp' => 'tmp/file.mp4'], 'expected' => 'path/file.png'],
+                'banner' => ['value' => ['tmp' => 'tmp/file.mp4'], 'expected' => 'path/file.png'],
+                'thumbHalf' => ['value' => null, 'expected' => null],
+            ],
+            [
+                'video' => ['value' => null, 'expected' => null],
+                'trailer' => ['value' => null, 'expected' => null],
+                'thumb' => ['value' => null, 'expected' => null],
+                'banner' => ['value' => null, 'expected' => null],
+                'thumbHalf' => ['value' => null, 'expected' => null],
+            ],
+        ];
+    }
     protected function createMockRepository()
     {
         $mock = Mockery::mock(stdClass::class, VideoRepositoryInterface::class);
@@ -104,7 +196,15 @@ class CreateVideoUseCaseUnitTest extends TestCase
         return $mock;
     }
 
-    protected function createMockInputDTO()
+    protected function createMockInputDTO(
+        array $categoriesIds = [], 
+        array $genresIds = [], 
+        array $castMembersIds = [],
+        ?array $videoFile = null,
+        ?array $thumbFile = null,
+        ?array $thumbHalf = null,
+        ?array $bannerFile = null,
+        ?array $trailerFile = null)
     {
         return Mockery::mock(CreateInputVideoDto::class, [
             'title',
@@ -113,9 +213,14 @@ class CreateVideoUseCaseUnitTest extends TestCase
             10,
             true,
             Rating::RATE10,
-            [],
-            [],
-            [],
+            $categoriesIds,
+            $genresIds,
+            $castMembersIds,
+            $videoFile,
+            $thumbFile,
+            $thumbHalf,
+            $bannerFile,
+            $trailerFile
         ]);
     }
 

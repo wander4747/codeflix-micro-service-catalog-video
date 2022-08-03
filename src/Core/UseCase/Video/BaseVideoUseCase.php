@@ -36,16 +36,17 @@ abstract class BaseVideoUseCase
     }
     protected function storageFiles(object $input): void
     {
-        $path = $this->builder->getEntity()->id();
+        $entity = $this->builder->getEntity();
+        $path = $entity->id();
 
         if ($pathVideoFile = $this->storageFile($path, $input->videoFile)) {
             $this->builder->addMediaVideo($pathVideoFile, MediaStatus::PROCESSING);
-            $this->eventManager->dispatch(new VideoCreatedEvent($this->entity));
+            $this->eventManager->dispatch(new VideoCreatedEvent($entity));
         }
 
         if ($pathTrailerFile = $this->storageFile($path, $input->trailerFile)) {
-            $this->builder->addMediaVideo($pathTrailerFile, MediaStatus::PROCESSING);
-            $this->eventManager->dispatch(new VideoCreatedEvent($this->entity));
+            $this->builder->addTrailer($pathTrailerFile, MediaStatus::PROCESSING);
+            $this->eventManager->dispatch(new VideoCreatedEvent($entity));
         }
 
         if ($pathThumbFile = $this->storageFile($path, $input->thumbFile)) {
@@ -53,11 +54,11 @@ abstract class BaseVideoUseCase
         }
 
         if ($pathThumbHalf = $this->storageFile($path, $input->thumbHalf)) {
-            $this->builder->addThumb($pathThumbHalf);
+            $this->builder->addThumbHalf($pathThumbHalf);
         }
 
         if ($pathBannerFile = $this->storageFile($path, $input->bannerFile)) {
-            $this->builder->addThumb($pathBannerFile);
+            $this->builder->addBanner($pathBannerFile);
         }
     }
     protected function storageFile(string $path, ?array $media = null): string|null
