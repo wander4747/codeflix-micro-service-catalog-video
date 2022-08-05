@@ -2,15 +2,13 @@
 
 namespace Tests\Unit\UseCase\Video;
 
-use Core\Domain\Enum\Rating;
-use Core\UseCase\DTO\Video\Create\{
-    CreateInputVideoDto,
-    CreateOutputVideoDto
-};
-use Core\UseCase\Video\CreateVideoUseCase;
+use Core\Domain\ValueObject\Uuid;
+use Core\UseCase\DTO\Video\Update\UpdateInputVideoDto;
+use Core\UseCase\DTO\Video\Update\UpdateOutputVideoDto;
+use Core\UseCase\Video\UpdateVideoUseCase;
 use Mockery;
 
-class CreateVideoUseCaseUnitTest extends BaseVideoUseCaseUnitTest
+class UpdateVideoUseCaseUnitTest extends BaseVideoUseCaseUnitTest
 {
     protected function createMockInputDTO(
         array $categoriesIds = [], 
@@ -22,13 +20,10 @@ class CreateVideoUseCaseUnitTest extends BaseVideoUseCaseUnitTest
         ?array $bannerFile = null,
         ?array $trailerFile = null)
     {
-        return Mockery::mock(CreateInputVideoDto::class, [
+        return Mockery::mock(UpdateInputVideoDto::class, [
+            Uuid::random(),
             'title',
             'description',
-            2022,
-            10,
-            true,
-            Rating::RATE10,
             $categoriesIds,
             $genresIds,
             $castMembersIds,
@@ -41,11 +36,11 @@ class CreateVideoUseCaseUnitTest extends BaseVideoUseCaseUnitTest
     }
 	
 	function nameActionRepository(): string {
-        return "insert";
+        return "update";
 	}
 	
 	function getUseCase(): string {
-        return CreateVideoUseCase::class;
+        return UpdateVideoUseCase::class;
 	}
 
     public function testExecInputOutput()
@@ -55,7 +50,7 @@ class CreateVideoUseCaseUnitTest extends BaseVideoUseCaseUnitTest
             input: $this->createMockInputDTO()
         );
         
-        $this->assertInstanceOf(CreateOutputVideoDto::class, $response);
+        $this->assertInstanceOf(UpdateOutputVideoDto::class, $response);
         $this->assertTrue(true);
     }
 }

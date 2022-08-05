@@ -2,26 +2,31 @@
 
 namespace Core\UseCase\Video;
 
-use Core\UseCase\DTO\Video\Create\CreateInputVideoDto;
-use Core\UseCase\DTO\Video\Create\CreateOutputVideoDto;
-use Throwable;
-use Core\Domain\Builder\Video\BuilderVideo;
 use Core\Domain\Builder\Video\Builder;
+use Core\Domain\Builder\Video\UpdateBuilderVideo;
+use Core\UseCase\DTO\Video\Update\UpdateInputVideoDto;
+use Core\UseCase\DTO\Video\Update\UpdateOutputVideoDto;
 
-class CreateVideoUseCase extends BaseVideoUseCase
+class UpdateVideoUseCase extends BaseVideoUseCase
 {
-	protected function getBuilder(): Builder {
-        return new BuilderVideo();
+    protected function getBuilder(): Builder {
+        return new UpdateBuilderVideo();
 	}
-
-    public function execute(CreateInputVideoDto $input): CreateOutputVideoDto
+    
+    public function execute(UpdateInputVideoDto $input): UpdateOutputVideoDto
     {
         $this->validateAllIds($input);
 
-        $this->builder->createEntity($input);
+        $entity = $this->repository->findById($input->id);
+        $entity->update(
+            title: $input->title,
+            description: $input->description,
+        );
+
+        $this->builder->setEntity($entity);
 
         try {
-            $this->repository->insert($this->builder->getEntity());
+            $this->repository->update($this->builder->getEntity());
             
             $this->storageFiles($input);
             $this->repository->updateMedia($this->builder->getEntity());
@@ -35,11 +40,11 @@ class CreateVideoUseCase extends BaseVideoUseCase
         }
     }
 
-    private function output(): CreateOutputVideoDto
+    private function output(): UpdateOutputVideoDto
     {
         $entity = $this->builder->getEntity();
 
-        return new CreateOutputVideoDto(
+        return new UpdateOutputVideoDto(
             id: $entity->id(),
             title: $entity->title,
             description: $entity->description,
@@ -57,4 +62,6 @@ class CreateVideoUseCase extends BaseVideoUseCase
             trailerFile: $entity->trailerFile()?->path,
         );
     }
+
+    
 }

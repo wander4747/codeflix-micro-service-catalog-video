@@ -42,6 +42,14 @@ class Video extends Entity {
         $this->validation();
     }
 
+    public function update(string $title, string $description): void
+    {
+        $this->title = $title;
+        $this->description = $description;
+
+        $this->validation();
+    }
+
     public function addCategory(string $categoryId) 
     {
         array_push($this->categoriesId, $categoryId);

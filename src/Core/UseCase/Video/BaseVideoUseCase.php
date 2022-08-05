@@ -17,11 +17,11 @@ use Core\Domain\Repository\{
     CastMemberRepositoryInterface
 };
 
-use Core\Domain\Builder\Video\BuilderVideo;
+use Core\Domain\Builder\Video\Builder;
 
 abstract class BaseVideoUseCase
 {
-    protected BuilderVideo $builder;
+    protected Builder $builder;
     public function __construct(
         protected VideoRepositoryInterface $repository,
         protected TransactionInterface $transaction,
@@ -32,8 +32,10 @@ abstract class BaseVideoUseCase
         protected CastMemberRepositoryInterface $repositoryCastMember
     )
     {
-        $this->builder = new BuilderVideo();
+        $this->builder = $this->getBuilder();
     }
+
+    abstract protected function getBuilder(): Builder;
     protected function storageFiles(object $input): void
     {
         $entity = $this->builder->getEntity();
