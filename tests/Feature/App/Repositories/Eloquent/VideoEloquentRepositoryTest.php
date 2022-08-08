@@ -102,4 +102,21 @@ class VideoEloquentRepositoryTest extends TestCase
         $this->assertEquals($genres->pluck('id')->toArray(), $entityInDb->genresId);
         $this->assertEquals($castMembers->pluck('id')->toArray(), $entityInDb->castMembersId);
     }
+
+    public function testNotFoundVideo()
+    {
+        $this->expectException(NotFoundException::class);
+
+        $this->repository->findById('fake_value');
+    }
+
+    public function testFinById()
+    {
+        $video = Model::factory()->create();
+
+        $response = $this->repository->findById($video->id);
+
+        $this->assertEquals($video->id, $response->id());
+        $this->assertEquals($video->title, $response->title);
+    }
 }
