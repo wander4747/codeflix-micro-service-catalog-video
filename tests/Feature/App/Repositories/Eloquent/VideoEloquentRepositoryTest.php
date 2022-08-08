@@ -181,4 +181,92 @@ class VideoEloquentRepositoryTest extends TestCase
             ],
         ];
     }
+
+    public function testUpdateNotFoundId()
+    {
+        $this->expectException(NotFoundException::class);
+
+        $entity = new EntityVideo(
+            title: 'Test',
+            description: 'Test',
+            yearLaunched: 2026,
+            rating: Rating::L,
+            duration: 1,
+            opened: true,
+        );
+
+        $this->repository->update($entity);
+    }
+
+    public function testUpdate()
+    {
+        $categories = Category::factory()->count(10)->create();
+        $genres = Genre::factory()->count(10)->create();
+        $castMembers = CastMember::factory()->count(10)->create();
+
+        $videoDb = Model::factory()->create();
+
+        $this->assertDatabaseHas('videos', [
+            'title' => $videoDb->title,
+        ]);
+
+        $entity = new EntityVideo(
+            id: new Uuid($videoDb->id),
+            title: 'Test',
+            description: 'Test',
+            yearLaunched: 2026,
+            rating: Rating::L,
+            duration: 1,
+            opened: true,
+            createdAt: new DateTime($videoDb->created_at),
+        );
+
+        foreach ($categories as $category) {
+            $entity->addCategory($category->id);
+        }
+
+        foreach ($genres as $genre) {
+            $entity->addGenre($genre->id);
+        }
+        
+        foreach ($castMembers as $castMember) {
+            $entity->addCastMember($castMember->id);
+        }
+
+        $entityInDb = $this->repository->update($entity);
+
+        $this->assertDatabaseHas('videos', [
+            'title' => 'Test',
+        ]);
+
+        $this->assertDatabaseCount('category_video', 10);
+        $this->assertDatabaseCount('genre_video', 10);
+        $this->assertDatabaseCount('cast_member_video', 10);
+
+        $this->assertEquals($categories->pluck('id')->toArray(), $entityInDb->categoriesId);
+        $this->assertEquals($genres->pluck('id')->toArray(), $entityInDb->genresId);
+        $this->assertEquals($castMembers->pluck('id')->toArray(), $entityInDb->castMembersId);
+    }
+
+    public function testDeleteNotFound()
+    {
+        $this->expectException(NotFoundException::class);
+
+        $this->repository->delete('fake_value');
+    }
+
+    public function testDelete()
+    {
+        $video = Model::factory()->create();
+
+        $this->assertDatabaseHas('videos', [
+            'id' => $video->id,
+        ]);
+
+        $this->repository->delete($video->id);
+
+        $this->assertSoftDeleted('videos', [
+            'id' => $video->id,
+        ]);
+    }
 }
