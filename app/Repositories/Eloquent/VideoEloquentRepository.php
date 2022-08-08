@@ -180,7 +180,7 @@ class VideoEloquentRepository implements VideoRepositoryInterface
         if ($mediaVideo = $model->media) {
             $builder->addMediaVideo(
                 path: $mediaVideo->file_path,
-                mediaStatus: MediaStatus::from($mediaVideo->media_status),
+                status: MediaStatus::from($mediaVideo->media_status),
                 encodedPath: $mediaVideo->encoded_path
             );
         }

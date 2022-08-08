@@ -14,8 +14,8 @@ trait VideoTrait
         if ($mediaVideo = $entity->videoFile()) {
             $action = $model->media()->first() ? 'update' : 'create';
             $model->media()->{$action}([
-                'file_path' => $mediaVideo->filePath,
-                'media_status' => $mediaVideo->mediaStatus->value,
+                'file_path' => $mediaVideo->path,
+                'media_status' => $mediaVideo->status->value,
                 'encoded_path' => $mediaVideo->encodedPath,
                 'type' => MediaTypes::VIDEO->value,
             ]);
@@ -27,8 +27,8 @@ trait VideoTrait
         if ($trailer = $entity->trailerFile()) {
             $action = $model->trailer()->first() ? 'update' : 'create';
             $model->trailer()->{$action}([
-                'file_path' => $trailer->filePath,
-                'media_status' => $trailer->mediaStatus->value,
+                'file_path' => $trailer->path,
+                'media_status' => $trailer->status->value,
                 'encoded_path' => $trailer->encodedPath,
                 'type' => MediaTypes::TRAILER->value,
             ]);
