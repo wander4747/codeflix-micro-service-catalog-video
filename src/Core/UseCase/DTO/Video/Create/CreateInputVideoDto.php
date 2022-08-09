@@ -11,7 +11,7 @@ class CreateInputVideoDto
         public string $description,
         public string $yearLaunched,
         public string $duration,
-        public string $opend,
+        public bool $opened,
         public Rating $rating,
         public array $categories,
         public array $genres,

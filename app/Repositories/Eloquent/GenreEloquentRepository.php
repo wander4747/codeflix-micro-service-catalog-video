@@ -48,7 +48,7 @@ class GenreEloquentRepository implements GenreRepositoryInterface
     public function getIdsListIds(array $genresId = []): array
     {
         return $this->model
-                    ->whereIn('id', $$genresId)
+                    ->whereIn('id', $genresId)
                     ->pluck('id')
                     ->toArray();
     }
