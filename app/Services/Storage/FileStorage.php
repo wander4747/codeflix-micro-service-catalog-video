@@ -16,11 +16,10 @@ class FileStorage implements FileStorageInterface
     {
         $contents = $this->convertoFileToLaravelFile($file);
 
-        // return $fileLaravel->store($path);
         return Storage::put($path, $contents);
     }
 
-    public function delete(string $path)
+    public function delete(string $path): void
     {
         Storage::delete($path);
     }
