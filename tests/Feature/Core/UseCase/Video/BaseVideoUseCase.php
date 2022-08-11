@@ -54,17 +54,7 @@ abstract class BaseVideoUseCase extends TestCase
         bool $withBanner = false,
     )
     {
-        $useCase = new ($this->useCase())(
-            $this->app->make(VideoRepositoryInterface::class),
-            $this->app->make(TransactionInterface::class),
-            //$this->app->make(FileStorageInterface::class),
-            new UploadFilesStub(),
-            //$this->app->make(VideoEventManagerInterface::class),
-            new VideoEventStub(),
-            $this->app->make(CategoryRepositoryInterface::class),
-            $this->app->make(GenreRepositoryInterface::class),
-            $this->app->make(CastMemberRepositoryInterface::class)
-        );
+        $stu = $this->makeSut();
 
         $categoriesIds = Category::factory()->count($categories)->create()->pluck('id')->toArray();
         $genresIds = Genre::factory()->count($genres)->create()->pluck('id')->toArray();
@@ -89,7 +79,7 @@ abstract class BaseVideoUseCase extends TestCase
             thumbHalf: $withThumbHalf ? $file : null,
         );
        
-        $response = $useCase->execute($input);
+        $response = $stu->execute($input);
         
         $this->assertEquals($input->title, $response->title);
         $this->assertEquals($input->description, $response->description);
@@ -147,5 +137,21 @@ abstract class BaseVideoUseCase extends TestCase
                 'withBanner' => true,
             ],
         ];
+    }
+
+    protected function makeSut()
+    {
+        return new ($this->useCase())(
+            $this->app->make(VideoRepositoryInterface::class),
+            $this->app->make(TransactionInterface::class),
+            // this->app->make(FileStorageInterface::class),
+            new UploadFilesStub(),
+            // $this->app->make(VideoEventManagerInterface::class),
+            new VideoEventStub(),
+
+            $this->app->make(CategoryRepositoryInterface::class),
+            $this->app->make(GenreRepositoryInterface::class),
+            $this->app->make(CastMemberRepositoryInterface::class)
+        );
     }
 }
