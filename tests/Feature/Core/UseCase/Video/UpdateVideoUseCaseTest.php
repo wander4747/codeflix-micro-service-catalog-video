@@ -2,17 +2,15 @@
 
 namespace Tests\Feature\Core\UseCase\Video;
 
-use Core\Domain\Enum\Rating;
-use Core\UseCase\DTO\Video\Create\CreateInputVideoDto;
-use Core\UseCase\Video\CreateVideoUseCase;
+use App\Models\Video;
+use Core\UseCase\DTO\Video\Update\UpdateInputVideoDto;
+use Core\UseCase\Video\UpdateVideoUseCase;
 
-;
-
-class CreateVideoUseCaseTest extends BaseVideoUseCase
+class UpdateVideoUseCaseTest extends BaseVideoUseCase
 {
     public function useCase(): string
     {
-        return CreateVideoUseCase::class;
+        return UpdateVideoUseCase::class;
     }
     
     public function inputDTO(
@@ -26,13 +24,12 @@ class CreateVideoUseCaseTest extends BaseVideoUseCase
         ?array $thumbHalf = null,
     ): object
     {
-        return new CreateInputVideoDto(
+        $video = Video::factory()->create();
+
+        return new UpdateInputVideoDto(
+            id: $video->id,
             title: 'test',
             description: 'test',
-            yearLaunched: 2020,
-            duration: 120,
-            opened: true,
-            rating: Rating::L,
             categories: $categories,
             genres: $genres,
             castMembers: $castMembers,

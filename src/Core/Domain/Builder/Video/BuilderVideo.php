@@ -35,7 +35,7 @@ class BuilderVideo implements Builder
         return $this;
     }
     
-    protected function addIds(object $input): void
+    public function addIds(object $input): void
     {
         foreach ($input->categories as $categoryId) {
             $this->entity->addCategory($categoryId);

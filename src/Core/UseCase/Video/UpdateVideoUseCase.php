@@ -22,8 +22,9 @@ class UpdateVideoUseCase extends BaseVideoUseCase
             title: $input->title,
             description: $input->description,
         );
-
+        
         $this->builder->setEntity($entity);
+        $this->builder->addIds($input);
 
         try {
             $this->repository->update($this->builder->getEntity());
@@ -62,6 +63,4 @@ class UpdateVideoUseCase extends BaseVideoUseCase
             trailerFile: $entity->trailerFile()?->path,
         );
     }
-
-    
 }
