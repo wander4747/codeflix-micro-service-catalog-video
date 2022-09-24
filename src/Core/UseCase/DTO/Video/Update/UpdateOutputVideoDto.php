@@ -14,6 +14,7 @@ class UpdateOutputVideoDto
         public string $duration,
         public string $opened,
         public Rating $rating,
+        public string $createdAt,
         public array $categories = [],
         public array $genres = [],
         public array $castMembers = [],
