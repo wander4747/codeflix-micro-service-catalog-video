@@ -4,11 +4,11 @@ namespace Tests\Unit\UseCase\Video;
 
 use Core\Domain\Entity\Video;
 use Core\Domain\Enum\Rating;
+use Core\Domain\Repository\PaginationInterface;
 use Core\Domain\Repository\VideoRepositoryInterface;
 use Core\Domain\ValueObject\Uuid;
 use Core\UseCase\DTO\Video\Paginate\{
-    PaginateInputVideoDto,
-    PaginateOutputVideoDto
+    PaginateInputVideoDto
 };
 use Core\UseCase\Video\ListVideosUseCase;
 use Mockery;
@@ -30,7 +30,7 @@ class ListVideosUseCaseUnitTest extends TestCase
             input: $this->mockInputDTO()
         );
 
-        $this->assertInstanceOf(PaginateOutputVideoDto::class, $response);
+        $this->assertInstanceOf(PaginationInterface::class, $response);
 
         $this->assertTrue(true);
 
