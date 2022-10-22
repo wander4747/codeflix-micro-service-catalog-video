@@ -59,7 +59,7 @@ class VideoController extends Controller
             trailerFile: getArrayFile($request->file('trailer_file')),
             bannerFile: getArrayFile($request->file('banner_file')),
             thumbFile: getArrayFile($request->file('thumb_file')),
-            thumbHalf: getArrayFile($request->file('thumb_half_file')),
+            thumbHalf: getArrayFile($request->file('thumb_half')),
         ));
 
         return ApiAdapter::json($response, Response::HTTP_CREATED);

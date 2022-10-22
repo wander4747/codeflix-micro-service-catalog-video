@@ -138,7 +138,7 @@ class VideoEloquentRepository implements VideoRepositoryInterface
         $this->updateImageBanner($entity, $objectModel);
         $this->updateImageThumb($entity, $objectModel);
         $this->updateImageThumbHalf($entity, $objectModel);
-        
+
         return $this->convertObjectToEntity($objectModel);
     }
 
