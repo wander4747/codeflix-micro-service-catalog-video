@@ -9,7 +9,6 @@ use App\Models\Video;
 use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-
 use Tests\TestCase;
 
 class VideoApiTest extends TestCase
@@ -27,7 +26,7 @@ class VideoApiTest extends TestCase
         'created_at',
     ];
 
-   public function testEmpty()
+    public function testEmpty()
     {
         $response = $this->getJson($this->endpoint);
         $response->assertOk();
@@ -38,10 +37,10 @@ class VideoApiTest extends TestCase
      * @dataProvider dataProviderPagination
      */
     public function testPagination(
-        int $total,
-        int $totalCurrentPage,
-        int $page = 1,
-        int $perPage = 15,
+        int    $total,
+        int    $totalCurrentPage,
+        int    $page = 1,
+        int    $perPage = 15,
         string $filter = '',
     )
     {
@@ -61,7 +60,7 @@ class VideoApiTest extends TestCase
         ]);
 
         $response = $this->getJson("$this->endpoint?$params");
-        
+
         $response->assertOk();
         $response->assertJsonCount($totalCurrentPage, 'data');
         $response->assertJsonPath('meta.current_page', $page);
@@ -69,7 +68,7 @@ class VideoApiTest extends TestCase
         $response->assertJsonStructure([
             'data' => [
                 '*' => $this->serializedFields
-            ], 
+            ],
             'meta' => [
                 'total',
                 'current_page',
@@ -90,13 +89,13 @@ class VideoApiTest extends TestCase
                 'totalCurrentPage' => 0,
                 'page' => 1,
                 'perPage' => 15,
-            ], 
+            ],
             'test with total two pages' => [
                 'total' => 20,
                 'totalCurrentPage' => 15,
                 'page' => 1,
                 'perPage' => 15,
-            ], 
+            ],
             'test page two' => [
                 'total' => 20,
                 'totalCurrentPage' => 5,
@@ -136,7 +135,7 @@ class VideoApiTest extends TestCase
         $response->assertNotFound();
     }
 
-    public function testStore()
+    public function store()
     {
         $mediaVideoFile = UploadedFile::fake()->create('video.mp4', 1, 'video/mp4');
         $imageVideoFile = UploadedFile::fake()->image('image.png');
@@ -185,7 +184,7 @@ class VideoApiTest extends TestCase
         Storage::deleteDirectory($response->json('data.id'));
     }
 
-     /**
+    /**
      * @test
      */
     // #[Test]
@@ -207,7 +206,7 @@ class VideoApiTest extends TestCase
         ]);
     }
 
-    public function testUpdate()
+    public function update()
     {
         $video = Video::factory()->create();
 
